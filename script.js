@@ -71,6 +71,10 @@ function init() {
     updateDisplay();
     updatePomodorosDisplay();
     setupEventListeners();
+
+    if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+    }
 }
 
 // Create animated background tomatoes
@@ -248,7 +252,11 @@ function getSessionType() {
 function formatTime(minutes, seconds) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
-
+function showNotification(title, body) {
+    if (Notification.permission === "granted") {
+        new Notification(title, { body });
+    }
+}
 function updateDisplay() {
     timeDisplay.textContent = formatTime(timerState.minutes, timerState.seconds);
     sessionType.textContent = getSessionType();
