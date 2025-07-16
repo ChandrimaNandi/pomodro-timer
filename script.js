@@ -141,21 +141,29 @@ function startTimer() {
     }
 
     function tick() {
-        const now = Date.now();
-        const msLeft = targetEndTime - now;
+    const now = Date.now();
+    const msLeft = targetEndTime - now;
 
-        if (msLeft <= 0) {
-            timerFinished();
-            return;
-        }
-
-        const totalSecondsLeft = Math.ceil(msLeft / 1000);
-        timerState.minutes = Math.floor(totalSecondsLeft / 60);
-        timerState.seconds = totalSecondsLeft % 60;
-
+    if (msLeft <= 0) {
+        // Force timer to 00:00
+        console.log("Timer done — calling timerFinished()");
+        timerState.minutes = 0;
+        timerState.seconds = 0;
         updateDisplay();
-        timerInterval = setTimeout(tick, 250); // Update smoothly every 250ms
+
+        // Call timerFinished
+        timerFinished();
+        return;
     }
+
+    const totalSecondsLeft = Math.floor(msLeft / 1000); // Use floor
+    timerState.minutes = Math.floor(totalSecondsLeft / 60);
+    timerState.seconds = totalSecondsLeft % 60;
+
+    updateDisplay();
+    timerInterval = setTimeout(tick, 250);
+}
+
 
     tick();
 }
@@ -255,8 +263,11 @@ function formatTime(minutes, seconds) {
 function showNotification(title, body) {
     if (Notification.permission === "granted") {
         new Notification(title, { body });
+    } else {
+        console.log("Notification permission not granted");
     }
 }
+
 function updateDisplay() {
     timeDisplay.textContent = formatTime(timerState.minutes, timerState.seconds);
     sessionType.textContent = getSessionType();
