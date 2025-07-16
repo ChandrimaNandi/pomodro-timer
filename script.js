@@ -274,16 +274,17 @@ function playNotificationSound() {
 
 function showNotification(title, body) {
     if (Notification.permission === "granted") {
-        new Notification(title, {
-            body,
+        new Notification(`🍅 ${title}`, {
+            body: `${body} 🍅`,
             requireInteraction: true
         });
-        playNotificationSound(); // play sound together
+        playNotificationSound();
     } else {
-        alert(`${title}\n\n${body}`); // fallback if notifications blocked
-        playNotificationSound();     // still play sound
+        alert(`🍅 ${title}\n\n${body} 🍅`);
+        playNotificationSound();
     }
 }
+
 
 
 function updateDisplay() {
