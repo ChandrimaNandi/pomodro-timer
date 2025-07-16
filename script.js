@@ -72,8 +72,10 @@ function init() {
     updatePomodorosDisplay();
     setupEventListeners();
 
-    if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
+    if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+            console.log("Notification permission:", permission);
+        });
     }
 }
 
@@ -156,7 +158,7 @@ function startTimer() {
         return;
     }
 
-    const totalSecondsLeft = Math.floor(msLeft / 1000); // Use floor
+    const totalSecondsLeft = Math.max(0, Math.round(msLeft / 1000));
     timerState.minutes = Math.floor(totalSecondsLeft / 60);
     timerState.seconds = totalSecondsLeft % 60;
 
@@ -260,13 +262,16 @@ function getSessionType() {
 function formatTime(minutes, seconds) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
+
+
 function showNotification(title, body) {
     if (Notification.permission === "granted") {
         new Notification(title, { body });
     } else {
-        console.log("Notification permission not granted");
+        alert(`${title}\n\n${body}`);
     }
 }
+
 
 function updateDisplay() {
     timeDisplay.textContent = formatTime(timerState.minutes, timerState.seconds);
