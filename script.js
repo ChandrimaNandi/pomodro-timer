@@ -229,6 +229,8 @@ function timerFinished() {
         showNotification("Back to Focus!", "Let’s get back to work 💪");
     }
 
+    playNotificationSound(); // <-- play sound on timer finish
+
     const newDuration = getCurrentSessionDuration();
     timerState.minutes = newDuration;
     timerState.seconds = 0;
@@ -237,6 +239,7 @@ function timerFinished() {
     updatePomodorosDisplay();
     console.log('Timer finished!');
 }
+
 
 // Helper functions
 function getCurrentSessionDuration() {
@@ -266,11 +269,21 @@ function formatTime(minutes, seconds) {
 
 function showNotification(title, body) {
     if (Notification.permission === "granted") {
-        new Notification(title, { body });
+        new Notification(title, { 
+            body,
+            requireInteraction: true // keeps notification until user dismisses
+        });
     } else {
-        alert(`${title}\n\n${body}`);
+        console.log("Notification permission not granted");
     }
 }
+
+function playNotificationSound() {
+    const audio = new Audio('assets/sounds/ding.mp3');
+    audio.play().catch(e => console.log("Sound play failed:", e));
+}
+
+// Call this in timerFinished() alongside showNotification
 
 
 function updateDisplay() {
