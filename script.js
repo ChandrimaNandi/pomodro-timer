@@ -266,24 +266,24 @@ function formatTime(minutes, seconds) {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-
-function showNotification(title, body) {
-    if (Notification.permission === "granted") {
-        new Notification(title, { 
-            body,
-            requireInteraction: true // keeps notification until user dismisses
-        });
-    } else {
-        console.log("Notification permission not granted");
-    }
-}
-
 function playNotificationSound() {
     const audio = new Audio('assets/sounds/ding.mp3');
     audio.play().catch(e => console.log("Sound play failed:", e));
 }
 
-// Call this in timerFinished() alongside showNotification
+
+function showNotification(title, body) {
+    if (Notification.permission === "granted") {
+        new Notification(title, {
+            body,
+            requireInteraction: true
+        });
+        playNotificationSound(); // play sound together
+    } else {
+        alert(`${title}\n\n${body}`); // fallback if notifications blocked
+        playNotificationSound();     // still play sound
+    }
+}
 
 
 function updateDisplay() {
