@@ -6,7 +6,7 @@ let timerState = {
     isWorkSession: true,
     completedPomodoros: 0
 };
-
+let targetEndTime = null;
 // Timer settings
 let settings = {
     workDuration: 25,
@@ -125,37 +125,57 @@ function setupEventListeners() {
 
 // Timer functions
 function startTimer() {
+    if (timerState.isRunning) return;
+
     timerState.isRunning = true;
     playBtn.style.display = 'none';
     pauseBtn.style.display = 'flex';
-    
-    timerInterval = setInterval(() => {
-        if (timerState.seconds > 0) {
-            timerState.seconds--;
-        } else if (timerState.minutes > 0) {
-            timerState.minutes--;
-            timerState.seconds = 59;
-        } else {
-            // Timer finished
+
+    const currentTime = Date.now();
+    if (!targetEndTime) {
+        targetEndTime = currentTime + (timerState.minutes * 60 + timerState.seconds) * 1000;
+    }
+
+    function tick() {
+        const now = Date.now();
+        const msLeft = targetEndTime - now;
+
+        if (msLeft <= 0) {
             timerFinished();
+            return;
         }
+
+        const totalSecondsLeft = Math.ceil(msLeft / 1000);
+        timerState.minutes = Math.floor(totalSecondsLeft / 60);
+        timerState.seconds = totalSecondsLeft % 60;
+
         updateDisplay();
-    }, 1000);
+        timerInterval = setTimeout(tick, 250); // Update smoothly every 250ms
+    }
+
+    tick();
 }
+
 
 function pauseTimer() {
     timerState.isRunning = false;
     playBtn.style.display = 'flex';
     pauseBtn.style.display = 'none';
-    clearInterval(timerInterval);
+    clearTimeout(timerInterval);
+
+    const remaining = Math.max(0, targetEndTime - Date.now());
+    timerState.minutes = Math.floor(remaining / 60000);
+    timerState.seconds = Math.floor((remaining % 60000) / 1000);
+    targetEndTime = null;
 }
 
 function stopTimer() {
     timerState.isRunning = false;
     playBtn.style.display = 'flex';
     pauseBtn.style.display = 'none';
-    clearInterval(timerInterval);
-    
+    clearTimeout(timerInterval);
+    targetEndTime = null;
+
     const currentDuration = getCurrentSessionDuration();
     timerState.minutes = currentDuration;
     timerState.seconds = 0;
@@ -170,10 +190,11 @@ function resetTimer() {
         isWorkSession: true,
         completedPomodoros: 0
     };
-    
+
     playBtn.style.display = 'flex';
     pauseBtn.style.display = 'none';
-    clearInterval(timerInterval);
+    clearTimeout(timerInterval);
+    targetEndTime = null;
     updateDisplay();
     updatePomodorosDisplay();
 }
@@ -182,23 +203,24 @@ function timerFinished() {
     timerState.isRunning = false;
     playBtn.style.display = 'flex';
     pauseBtn.style.display = 'none';
-    clearInterval(timerInterval);
-    
+    clearTimeout(timerInterval);
+    targetEndTime = null;
+
     // Switch session type
     timerState.isWorkSession = !timerState.isWorkSession;
     if (!timerState.isWorkSession) {
         timerState.completedPomodoros++;
+        showNotification("Time for a Break!", "You’ve earned it 🍵");
+    } else {
+        showNotification("Back to Focus!", "Let’s get back to work 💪");
     }
-    
-    // Set new duration
+
     const newDuration = getCurrentSessionDuration();
     timerState.minutes = newDuration;
     timerState.seconds = 0;
-    
+
     updateDisplay();
     updatePomodorosDisplay();
-    
-    // Play notification sound (you can add audio here)
     console.log('Timer finished!');
 }
 
