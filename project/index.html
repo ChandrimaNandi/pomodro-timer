@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivating Pomodoro Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Tomatoes -->
+    <div id="background-tomatoes"></div>
+    
+    <div class="container">
+        <div class="timer-card">
+            <!-- Header -->
+            <div class="header">
+                <div class="title-section">
+                    <h1>PomoDoro</h1>
+                    <p id="session-type">Focus Time</p>
+                </div>
+                <button id="settings-btn" class="settings-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1m17-4a4 4 0 0 1-8 0 4 4 0 0 1 8 0zM7 21a4 4 0 0 1-8 0 4 4 0 0 1 8 0z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="timer-display">
+                <svg class="progress-ring" width="256" height="256" viewBox="0 0 256 256">
+                    <circle class="progress-ring-bg" cx="128" cy="128" r="120"></circle>
+                    <circle class="progress-ring-fill" cx="128" cy="128" r="120" id="progress-circle"></circle>
+                </svg>
+                <div class="timer-content">
+                    <div class="time-display" id="time-display">25:00</div>
+                    <div class="progress-text" id="progress-text">0% Complete</div>
+                </div>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="controls">
+                <button id="play-btn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5,3 19,12 5,21"></polygon>
+                    </svg>
+                </button>
+                <button id="pause-btn" class="control-btn" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="6" y="4" width="4" height="16"></rect>
+                        <rect x="14" y="4" width="4" height="16"></rect>
+                    </svg>
+                </button>
+                <button id="stop-btn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    </svg>
+                </button>
+                <button id="reset-btn" class="control-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="1,4 1,10 7,10"></polyline>
+                        <path d="M3.51,15a9,9,0,0,0,2.13,3.09,9,9,0,0,0,13.72,0,9,9,0,0,0,0-12.72,9,9,0,0,0-13.72,0L3.51,9"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Completed Pomodoros -->
+            <div class="pomodoros-section">
+                <p class="pomodoros-label">Completed Pomodoros</p>
+                <div class="pomodoros-display" id="pomodoros-display"></div>
+            </div>
+
+            <!-- Quote Display -->
+            <div class="quote-container">
+                <div class="quote-display" id="quote-display"></div>
+            </div>
+
+            <!-- Hint Text -->
+            <div class="hint-text">
+                <p>Hover over pause or stop for motivation</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Timer Settings</h2>
+                <button id="close-settings" class="close-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="settings-form">
+                <div class="form-group">
+                    <label for="work-duration">Work Duration (minutes)</label>
+                    <input type="number" id="work-duration" min="1" max="60" value="25">
+                </div>
+                <div class="form-group">
+                    <label for="break-duration">Short Break (minutes)</label>
+                    <input type="number" id="break-duration" min="1" max="30" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="long-break-duration">Long Break (minutes)</label>
+                    <input type="number" id="long-break-duration" min="1" max="60" value="15">
+                </div>
+                <div class="form-group">
+                    <label for="long-break-interval">Long Break Interval (pomodoros)</label>
+                    <input type="number" id="long-break-interval" min="2" max="10" value="4">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancel-settings" class="btn-secondary">Cancel</button>
+                <button id="save-settings" class="btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
