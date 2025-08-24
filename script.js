@@ -36,6 +36,7 @@ const motivationalQuotes = [
     "Small steps daily lead to big changes yearly.",
     "Your only limit is your mind.",
     "Dream it. Believe it. Build it.",
+    "It Gets Easier. Every Day, It Gets A Little Easier. But You Gotta Do It Every Day. That's The Hard Part.",
     "My hardwork will make me lucky."
 ];
 
